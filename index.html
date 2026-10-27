@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0f14" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafbfc" />
+    <title>Karan Joy Kundu — Electronics &amp; Communication Engineering, KUET</title>
+    <meta
+      name="description"
+      content="Portfolio of Karan Joy Kundu, ECE student at KUET, Bangladesh. Embedded systems, analog electronics, robotics, machine learning."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      /* Theme init before paint: stored preference, else system preference. */
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+          var light = stored ? stored === "light" : systemLight;
+          if (light) document.documentElement.classList.add("light");
+        } catch (e) {
+          /* private mode: keep default dark */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

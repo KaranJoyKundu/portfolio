@@ -1,0 +1,84 @@
+/*
+ * DESIGN TOKENS — single source of truth.
+ * Dark theme is the default (:root). Light theme overrides under `.light`,
+ * applied to <html> by src/lib/theme.ts (respects prefers-color-scheme on
+ * first visit, persists the user's explicit choice).
+ *
+ * Every text/background pair used for content is verified by
+ * src/tokens.test.ts — the build fails below WCAG 2.2 AA.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --c-bg: #0b0f14;
+  --c-surface: #10161e;
+  --c-surface-2: #151d27;
+  --c-border: #22303f;
+
+  /* Text */
+  --c-text: #e7edf4;
+  --c-muted: #9aa9b8;
+
+  /* Accent — one only: instrument-panel amber */
+  --c-accent: #f5b759; /* strokes, markers, waveform on dark */
+  --c-accent-text: #f5b759; /* links on dark */
+  --c-on-accent: #201405; /* text on amber fills */
+
+  /* Primary button fill (theme-specific: amber-on-dark, ink-on-light) */
+  --c-btn-bg: #f5b759;
+  --c-btn-fg: #201405;
+
+  /* Schematic grid lines (decorative) */
+  --grid-line: color-mix(in oklab, var(--c-border) 55%, transparent);
+
+  /* Motion */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-reveal: 320ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.light {
+  color-scheme: light;
+
+  --c-bg: #fafbfc;
+  --c-surface: #ffffff;
+  --c-surface-2: #f2f4f6;
+  --c-border: #dfe6ec;
+
+  --c-text: #10181f;
+  --c-muted: #4a5764;
+
+  --c-accent: #b4771a; /* UI strokes on light */
+  --c-accent-text: #8a5c00; /* links on light */
+  --c-on-accent: #201405;
+
+  --c-btn-bg: #10181f;
+  --c-btn-fg: #f5b759;
+}
+
+/* Tailwind theme mapping — utilities like bg-bg, text-muted, font-mono. */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface2: var(--c-surface-2);
+  --color-border: var(--c-border);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-accent: var(--c-accent);
+  --color-accent-text: var(--c-accent-text);
+  --color-on-accent: var(--c-on-accent);
+  --color-btn-bg: var(--c-btn-bg);
+  --color-btn-fg: var(--c-btn-fg);
+
+  --font-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-xs: 2px;
+  --radius-md: 8px;
+
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+}
