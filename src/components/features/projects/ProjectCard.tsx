@@ -30,7 +30,7 @@ export function ProjectCard({ project, variant = "compact" }: Props) {
           feature ? "aspect-[16/8]" : "aspect-[16/9]"
         )}
       >
-        <ProjectCover project={project} />
+        <ProjectCover project={project} eager={feature} />
       </div>
 
       <div className={cn("flex flex-1 flex-col", feature ? "gap-3 p-6" : "gap-2.5 p-4")}>

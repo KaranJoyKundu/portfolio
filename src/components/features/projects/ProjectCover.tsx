@@ -8,7 +8,14 @@ import { PlaceholderFlag } from "@/components/ui/PlaceholderFlag";
  * neutral designed panel — a schematic grid with a device-ID label — in
  * both themes, with the dashed flag only in development.
  */
-export function ProjectCover({ project }: { project: Project }) {
+export function ProjectCover({
+  project,
+  eager = false,
+}: {
+  project: Project;
+  /** Eager + fetchpriority for the home-page LCP candidate. */
+  eager?: boolean;
+}) {
   if (project.images.status === "verified") {
     const figure = project.images.figures[0];
     if (!figure) return null;
@@ -18,8 +25,9 @@ export function ProjectCover({ project }: { project: Project }) {
         alt={figure.alt}
         width={figure.width}
         height={figure.height}
-        loading="lazy"
+        loading={eager ? "eager" : "lazy"}
         decoding="async"
+        fetchPriority={eager ? "high" : undefined}
         className="h-full w-full object-cover"
       />
     );
