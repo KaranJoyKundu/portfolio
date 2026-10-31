@@ -1,4 +1,5 @@
 import type { Project } from "@/lib/schema";
+import { assetSrc } from "@/lib/asset";
 import { PlaceholderFlag } from "@/components/ui/PlaceholderFlag";
 
 /**
@@ -13,7 +14,7 @@ export function ProjectCover({ project }: { project: Project }) {
     if (!figure) return null;
     return (
       <img
-        src={figure.src}
+        src={assetSrc(figure.src)}
         alt={figure.alt}
         width={figure.width}
         height={figure.height}

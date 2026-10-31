@@ -1,4 +1,5 @@
 import type { Figure } from "@/lib/schema";
+import { assetSrc } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,7 +16,7 @@ export function FigureWithCaption({
   return (
     <figure className={cn("m-0", className)}>
       <img
-        src={figure.src}
+        src={assetSrc(figure.src)}
         alt={figure.alt}
         width={figure.width}
         height={figure.height}
