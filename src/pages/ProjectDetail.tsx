@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Tag } from "@/components/ui/Tag";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { PlaceholderFlag } from "@/components/ui/PlaceholderFlag";
+import { FigureWithCaption } from "@/components/ui/FigureWithCaption";
 import { projectBySlug, caseStudyOf } from "@/lib/content";
 import { NotFound } from "@/pages/NotFound";
 import { Seo } from "@/lib/seo";
@@ -40,6 +41,14 @@ export function ProjectDetail() {
         <p className="mt-3 max-w-2xl text-lg text-muted">{project.summary}</p>
       </header>
 
+      {project.images.status === "verified" && project.images.figures.length > 0 && (
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {project.images.figures.map((figure) => (
+            <FigureWithCaption key={figure.src} figure={figure} />
+          ))}
+        </div>
+      )}
+
       <div className="grid gap-10 pt-10 lg:grid-cols-[1fr_280px]">
         <div className="min-w-0">
           {detail && detail.status === "verified" ? (
@@ -59,6 +68,37 @@ export function ProjectDetail() {
               />
               <Narrative title="Results" body={detail.results} />
               <Narrative title="What I would improve" body={detail.improvements} />
+              {detail.bom && detail.bom.length > 0 && (
+                <section>
+                  <h2 className="font-display text-xl font-medium">Bill of materials</h2>
+                  <div className="mt-3 overflow-x-auto rounded-md border border-border">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-surface2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
+                        <tr>
+                          <th className="px-3 py-2">Part</th>
+                          <th className="px-3 py-2">Spec</th>
+                          <th className="px-3 py-2 text-right">Qty</th>
+                          <th className="px-3 py-2">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {detail.bom.map((row) => (
+                          <tr key={row.part}>
+                            <td className="px-3 py-2 font-medium">{row.part}</td>
+                            <td className="px-3 py-2 text-muted">{row.value}</td>
+                            <td className="px-3 py-2 text-right font-mono text-muted">
+                              ×{row.quantity}
+                            </td>
+                            <td className="px-3 py-2 text-muted">
+                              {row.notes ?? row.ref}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              )}
             </div>
           ) : (
             <CaseStudyPending flagged={pending} />

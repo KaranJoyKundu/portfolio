@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { SkipLink } from "./SkipLink";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { CircuitTrace } from "@/components/effects/CircuitTrace";
+import { CursorGlow } from "@/components/effects/CursorGlow";
 
 /** Page chrome shared by every route. */
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -15,6 +17,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <CircuitTrace />
+      <CursorGlow />
       <SkipLink />
       <Header />
       <main id="main" className="min-h-[60vh]">

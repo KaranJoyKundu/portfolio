@@ -1,8 +1,9 @@
 import type { Project } from "@/lib/schema";
 
 /**
- * Kairos. Facts limited to what Karan supplied: offline, local AI
- * assistant running on Windows 11.
+ * Kairos — tech stack verified from Karan's own project notes
+ * (Desktop\CSE Projects\AI Automation\README1.0.md + KAIROS_CONTINUE.md),
+ * status "in development". Summary is the approved seed copy.
  */
 const kairos = {
   slug: "kairos",
@@ -10,8 +11,18 @@ const kairos = {
   summary:
     "An offline, local AI assistant that runs entirely on a Windows 11 machine.",
   status: "in-progress",
-  tags: ["ML", "Web"],
-  tech: ["Offline AI", "Windows 11"],
+  tags: ["ML"],
+  tech: [
+    "Python 3.11",
+    "Ollama (local LLMs)",
+    "DeepSeek-R1 14B (planner/chat)",
+    "Qwen 2.5-VL 7B (vision)",
+    "Qwen 2.5-Coder 14B",
+    "faster-whisper (STT)",
+    "openWakeWord",
+    "Kokoro TTS",
+    "LangGraph",
+  ],
   order: 5,
   featured: true,
   images: { status: "placeholder", figures: [] },

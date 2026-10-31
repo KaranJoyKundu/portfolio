@@ -32,6 +32,107 @@ body {
   background-size: 32px 32px;
 }
 
+/* ── Circuit-trace background ───────────────────────────────────────────
+   Etched board traces behind all content. Strokes use the accent at low
+   opacity; the dash animation walks a pulse along each path. The global
+   reduced-motion block already freezes the animation; stroke colors are
+   theme-aware. */
+.circuit-trace path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--c-accent) 16%, transparent);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 6 14;
+}
+.circuit-trace path:nth-child(odd) {
+  animation: circuit-pulse 14s linear infinite;
+}
+.circuit-trace path:nth-child(even) {
+  animation: circuit-pulse 20s linear infinite reverse;
+}
+@keyframes circuit-pulse {
+  from {
+    stroke-dashoffset: 400;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.circuit-node {
+  fill: color-mix(in oklab, var(--c-accent) 30%, transparent);
+  stroke: none;
+  animation: circuit-node 6s ease-in-out infinite alternate;
+}
+@keyframes circuit-node {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Cursor glow ────────────────────────────────────────────────────── */
+.cursor-glow {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--c-accent) 14%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  will-change: transform;
+}
+
+/* ── Typewriter caret ───────────────────────────────────────────────── */
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 0.15em;
+  vertical-align: text-bottom;
+  background-color: var(--c-accent);
+  animation: caret-blink 1s steps(1) infinite;
+}
+.caret-idle {
+  animation: caret-blink 1.2s ease-in-out infinite;
+}
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ── Tilt cards ─────────────────────────────────────────────────────── */
+/* transform vars set from JS (useTilt); static devices get none. */
+.tilt-card {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --tilt-glow: 0;
+  transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition: transform 160ms var(--ease-out);
+  will-change: transform;
+}
+.tilt-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    480px circle at var(--tilt-mx, 50%) var(--tilt-my, 50%),
+    color-mix(in oklab, var(--c-accent) 9%, transparent),
+    transparent 60%
+  );
+  opacity: var(--tilt-glow);
+  transition: opacity 200ms var(--ease-out);
+}
+
 /* Skip link — invisible until focused. */
 .skip-link {
   position: fixed;

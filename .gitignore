@@ -4,5 +4,9 @@ coverage
 *.tsbuildinfo
 *.local
 content-placeholder-report.json
+
+# Private — never commit. The repo is public.
+karan.md
+.lh*
 .DS_Store
 Thumbs.db
