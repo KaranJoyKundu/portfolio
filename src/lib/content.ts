@@ -1,6 +1,13 @@
 import { rawProjects } from "@/content/projects";
 import { rawAchievements } from "@/content/achievements";
-import type { CaseStudyBlock, Project } from "@/lib/schema";
+import { rawTimeline } from "@/content/timeline";
+import { rawLabEntries } from "@/content/lab-entries";
+import type {
+  CaseStudyBlock,
+  Project,
+  VerifiedLabEntry,
+  VerifiedTimelineEntry,
+} from "@/lib/schema";
 
 /**
  * CONTENT LOADER — the only way pages read content.
@@ -68,3 +75,49 @@ export const verifiedAchievements = rawAchievements.filter(
 );
 
 export const hasVerifiedAchievements: boolean = verifiedAchievements.length > 0;
+
+/** Learning timeline, verified entries only. */
+export const verifiedTimeline: VerifiedTimelineEntry[] = rawTimeline.filter(
+  (e): e is VerifiedTimelineEntry => e.contentStatus === "verified"
+);
+
+/** Lab-notebook entries, verified only, newest first by date. */
+export const verifiedLabEntries: VerifiedLabEntry[] = rawLabEntries
+  .filter((e): e is VerifiedLabEntry => e.contentStatus === "verified")
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+/**
+ * Skill groups derived from real project data — every skill links back to
+ * the projects that used it. No percentage bars, no invented skills.
+ */
+export type SkillItem = { name: string; projectSlugs: string[] };
+export type SkillGroup = { domain: string; items: SkillItem[] };
+
+export function skillGroups(): SkillGroup[] {
+  const domains: Array<{ domain: SkillGroup["domain"]; tags: string[] }> = [
+    { domain: "Embedded", tags: ["Embedded"] },
+    { domain: "Analog", tags: ["Analog"] },
+    { domain: "Robotics", tags: ["Robotics"] },
+    { domain: "Machine learning", tags: ["ML"] },
+    { domain: "Web & software", tags: ["Web"] },
+  ];
+  const groups: SkillGroup[] = [];
+  for (const { domain, tags } of domains) {
+    const byTech = new Map<string, string[]>();
+    for (const p of projects) {
+      if (!p.tags.some((t) => tags.includes(t))) continue;
+      for (const tech of p.tech) {
+        const slugs = byTech.get(tech) ?? [];
+        if (!slugs.includes(p.slug)) slugs.push(p.slug);
+        byTech.set(tech, slugs);
+      }
+    }
+    if (byTech.size > 0) {
+      groups.push({
+        domain,
+        items: [...byTech].map(([name, projectSlugs]) => ({ name, projectSlugs })),
+      });
+    }
+  }
+  return groups;
+}

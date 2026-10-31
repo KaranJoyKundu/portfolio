@@ -64,3 +64,33 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Print — clean resume output when the user prints from the Resume page. */
+@media print {
+  header,
+  footer,
+  .skip-link {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+  h1,
+  h2,
+  h3,
+  p,
+  li,
+  dt,
+  dd {
+    color: #111111 !important;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  section {
+    border: none !important;
+  }
+}

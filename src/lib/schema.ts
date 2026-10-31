@@ -121,3 +121,44 @@ export const achievementSchema = z.discriminatedUnion("contentStatus", [
   }),
 ]);
 export type Achievement = z.infer<typeof achievementSchema>;
+export type VerifiedTimelineEntry = Extract<
+  z.infer<typeof timelineEntrySchema>,
+  { contentStatus: "verified" }
+>;
+export type VerifiedLabEntry = Extract<
+  z.infer<typeof labEntrySchema>,
+  { contentStatus: "verified" }
+>;
+
+/** Learning timeline entries — verified only, like achievements. */
+export const timelineEntrySchema = z.discriminatedUnion("contentStatus", [
+  z.object({
+    contentStatus: z.literal("verified"),
+    period: z.string().min(4),
+    title: z.string().min(3),
+    body: z.string().optional(),
+  }),
+  z.object({
+    contentStatus: z.literal("placeholder"),
+    title: z.string().min(3),
+    period: z.string().optional(),
+  }),
+]);
+export type TimelineEntry = z.infer<typeof timelineEntrySchema>;
+
+/** Lab-notebook entries for the Engineering page — verified only. */
+export const labEntrySchema = z.discriminatedUnion("contentStatus", [
+  z.object({
+    contentStatus: z.literal("verified"),
+    slug: z.string().regex(/^[a-z0-9-]+$/),
+    title: z.string().min(3),
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "ISO date"),
+    excerpt: z.string().min(20),
+    tags: z.array(tagSchema).min(1),
+  }),
+  z.object({
+    contentStatus: z.literal("placeholder"),
+    title: z.string().min(3),
+  }),
+]);
+export type LabEntry = z.infer<typeof labEntrySchema>;
