@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://karanjoykundu.github.io/portfolio/sitemap.xml

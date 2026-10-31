@@ -2,6 +2,7 @@ import { Mail, Link as LinkIcon } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { CopyEmail } from "@/components/ui/CopyEmail";
 import { site } from "@/content/site.config";
+import { Seo } from "@/lib/seo";
 
 const CHANNELS = [
   {
@@ -18,7 +19,13 @@ const CHANNELS = [
 
 export function Contact() {
   return (
-    <Section
+    <>
+      <Seo
+        title="Contact — Karan Joy Kundu"
+        description="Email and profiles for Karan Joy Kundu — ECE student at KUET, Khulna, Bangladesh."
+        path="/contact"
+      />
+      <Section
       kicker="07 / Contact"
       title="Contact"
       lede="The fastest path is email. I read it every day."
@@ -70,6 +77,7 @@ export function Contact() {
           about circuits in concrete terms.
         </p>
       </section>
-    </Section>
+      </Section>
+    </>
   );
 }

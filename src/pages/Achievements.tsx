@@ -1,5 +1,6 @@
 import { Section } from "@/components/ui/Section";
 import { verifiedAchievements } from "@/lib/content";
+import { Seo } from "@/lib/seo";
 
 /**
  * ACHIEVEMENTS — ledger of verified items with source links.
@@ -7,7 +8,13 @@ import { verifiedAchievements } from "@/lib/content";
  */
 export function Achievements() {
   return (
-    <Section
+    <>
+      <Seo
+        title="Achievements — Karan Joy Kundu"
+        description="Verified academic, chess, and project achievements — each with its source."
+        path="/achievements"
+      />
+      <Section
       kicker="05 / Achievements"
       title="Achievements"
       lede="Only items I can point to a source for. Academic, chess, and project records."
@@ -42,6 +49,7 @@ export function Achievements() {
           ))}
         </ol>
       )}
-    </Section>
+      </Section>
+    </>
   );
 }

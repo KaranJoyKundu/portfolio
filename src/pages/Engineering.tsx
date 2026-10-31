@@ -3,6 +3,7 @@ import { Section } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Tag";
 import { PlaceholderFlag } from "@/components/ui/PlaceholderFlag";
 import { verifiedLabEntries, projects, IS_DEV } from "@/lib/content";
+import { Seo } from "@/lib/seo";
 
 const BENCH_SLUGS = ["lm393-battery-fuel-gauge", "opamp-ecg-heart-rate-monitor", "ppg-pulse-sensor"];
 
@@ -12,7 +13,13 @@ export function Engineering() {
   );
 
   return (
-    <Section
+    <>
+      <Seo
+        title="Engineering — Karan Joy Kundu"
+        description="Lab notebook: circuits, robotics, and hardware experiments from the ECE bench."
+        path="/engineering"
+      />
+      <Section
       kicker="03 / Engineering"
       title="Engineering"
       lede="Circuits, robotics, and hardware experiments — documented like a lab notebook: what was wired, what was measured, what broke."
@@ -74,6 +81,7 @@ export function Engineering() {
           </li>
         ))}
       </ul>
-    </Section>
+      </Section>
+    </>
   );
 }

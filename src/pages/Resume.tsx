@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { projects, IS_DEV } from "@/lib/content";
 import { site } from "@/content/site.config";
+import { Seo } from "@/lib/seo";
 
 /**
  * RESUME — web view driven by content (education, projects, skills).
@@ -10,7 +11,13 @@ import { site } from "@/content/site.config";
  */
 export function Resume() {
   return (
-    <Section
+    <>
+      <Seo
+        title="Resume — Karan Joy Kundu"
+        description="Web resume of Karan Joy Kundu: education, projects, and skills — printable to PDF."
+        path="/resume"
+      />
+      <Section
       kicker="06 / Resume"
       title="Resume"
       lede="A web view of the essentials. Print it with your browser's print dialog for a clean PDF."
@@ -97,6 +104,7 @@ export function Resume() {
           </ul>
         </section>
       </div>
-    </Section>
+      </Section>
+    </>
   );
 }

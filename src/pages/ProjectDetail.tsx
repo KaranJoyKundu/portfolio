@@ -5,6 +5,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { PlaceholderFlag } from "@/components/ui/PlaceholderFlag";
 import { projectBySlug, caseStudyOf } from "@/lib/content";
 import { NotFound } from "@/pages/NotFound";
+import { Seo } from "@/lib/seo";
 
 export function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,7 +16,13 @@ export function ProjectDetail() {
   const pending = project.detail?.status === "placeholder";
 
   return (
-    <article className="mx-auto max-w-6xl px-6 pb-20">
+    <>
+      <Seo
+        title={`${project.title} — Karan Joy Kundu`}
+        description={project.summary}
+        path={`/projects/${project.slug}`}
+      />
+      <article className="mx-auto max-w-6xl px-6 pb-20">
       <Link
         to="/projects"
         className="mt-8 inline-flex items-center gap-1.5 font-mono text-xs text-muted hover:text-text"
@@ -83,6 +90,7 @@ export function ProjectDetail() {
         </aside>
       </div>
     </article>
+    </>
   );
 }
 

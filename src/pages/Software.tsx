@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Section } from "@/components/ui/Section";
 import { ArrowUpRight } from "lucide-react";
 import { skillGroups } from "@/lib/content";
+import { Seo } from "@/lib/seo";
 
 /**
  * SOFTWARE — skills derived from real projects, each one linked back to
@@ -11,7 +12,13 @@ export function Software() {
   const groups = skillGroups();
 
   return (
-    <Section
+    <>
+      <Seo
+        title="Software — Karan Joy Kundu"
+        description="C/C++, Python, and the software and tooling behind the builds — every skill linked to the project that used it."
+        path="/software"
+      />
+      <Section
       kicker="04 / Software"
       title="Software"
       lede="The software and tooling behind the builds. Every skill points to the project that used it — nothing here is a self-rating."
@@ -60,6 +67,7 @@ export function Software() {
           </section>
         ))}
       </div>
-    </Section>
+      </Section>
+    </>
   );
 }

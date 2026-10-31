@@ -1,0 +1,22 @@
+{
+  "name": "Karan Joy Kundu — Portfolio",
+  "short_name": "KJK",
+  "description": "Portfolio of Karan Joy Kundu, ECE student at KUET, Bangladesh.",
+  "start_url": "/portfolio/",
+  "scope": "/portfolio/",
+  "display": "browser",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "icons": [
+    {
+      "src": "/portfolio/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/portfolio/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

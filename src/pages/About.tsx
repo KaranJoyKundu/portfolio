@@ -1,5 +1,6 @@
 import { Timeline } from "@/components/ui/Timeline";
 import { Tag } from "@/components/ui/Tag";
+import { Seo } from "@/lib/seo";
 import { site } from "@/content/site.config";
 import { verifiedTimeline, IS_DEV } from "@/lib/content";
 
@@ -10,7 +11,13 @@ import { verifiedTimeline, IS_DEV } from "@/lib/content";
  */
 export function About() {
   return (
-    <article className="mx-auto max-w-6xl px-6 pb-20">
+    <>
+      <Seo
+        title="About — Karan Joy Kundu"
+        description="Background, engineering approach, and the honest student note behind Karan Joy Kundu's work in electronics and robotics."
+        path="/about"
+      />
+      <article className="mx-auto max-w-6xl px-6 pb-20">
       <header className="py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.14em] text-accent-text">
           01 / About
@@ -126,6 +133,7 @@ export function About() {
         </aside>
       </div>
     </article>
+    </>
   );
 }
 
