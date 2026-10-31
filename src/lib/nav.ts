@@ -1,4 +1,4 @@
-import { site } from "@/content/site.config";
+import { hasVerifiedAchievements } from "@/lib/content";
 
 export type NavItem = {
   to: string;
@@ -13,7 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/projects", label: "Projects" },
   { to: "/engineering", label: "Engineering" },
   { to: "/software", label: "Software" },
-  { to: "/achievements", label: "Achievements", hidden: !site.achievements.enabled },
+  { to: "/achievements", label: "Achievements", hidden: !hasVerifiedAchievements },
   { to: "/resume", label: "Resume" },
   { to: "/contact", label: "Contact" },
 ];

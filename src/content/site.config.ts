@@ -21,14 +21,6 @@ export const site = {
 
   /** Production site URL (no custom domain yet — GitHub Pages). */
   siteUrl: "https://karanjoykundu.github.io",
-
-  /**
-   * Achievements are hidden (including the nav link) until at least one
-   * item is verified in the content data. Flip automatically by the loader.
-   */
-  achievements: {
-    enabled: false as boolean, // content-driven after the content milestone
-  },
 } as const;
 
 export type SiteConfig = typeof site;
