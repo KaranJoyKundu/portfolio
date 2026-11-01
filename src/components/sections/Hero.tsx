@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { site } from "@/content/site.config";
 import { Button } from "@/components/ui/Button";
-import { Typewriter } from "@/components/effects/Typewriter";
 import { Waveform } from "./Waveform";
 
 /** One restrained load-in for the hero; static under reduced motion. */
@@ -26,14 +25,13 @@ export function Hero() {
         <div>
           <Reveal delay={0}>
             <p className="font-mono text-xs uppercase tracking-[0.14em] text-accent-text">
-              {`// `}
-              <Typewriter text={site.role} speed={38} />
+              {`// ${site.role}`}
             </p>
           </Reveal>
           <Reveal delay={0.06}>
             <h1
               id="hero-heading"
-              className="mt-4 font-display text-4xl font-medium leading-tight sm:text-6xl"
+              className="mt-4 font-display text-5xl font-medium leading-[1.05] tracking-tight text-text sm:text-7xl"
             >
               {site.name}
             </h1>

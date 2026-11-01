@@ -6,7 +6,7 @@ type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xs font-mono transition-colors duration-[var(--dur-fast)]";
+  "inline-flex items-center justify-center gap-2 rounded-xs font-sans transition-colors duration-[var(--dur-fast)]";
 
 const variants: Record<Variant, string> = {
   primary: "bg-btn-bg text-btn-fg hover:opacity-90",

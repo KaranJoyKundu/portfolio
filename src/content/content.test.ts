@@ -75,8 +75,9 @@ describe("content schema integrity", () => {
 describe("placeholder inventory report", () => {
   it("writes the CI report and keeps the inventory complete", () => {
     const inventory = placeholderInventory();
-    // Bee now ships a case study + photos; the other four still pending.
-    expect(inventory.filter((i) => i.kind === "project-detail")).toHaveLength(4);
+    // Kairos now ships a verified feature/memory/safety case study; the
+    // remaining three still pending (Bee + Kairos shipped case studies).
+    expect(inventory.filter((i) => i.kind === "project-detail")).toHaveLength(3);
     expect(inventory.filter((i) => i.kind === "project-images")).toHaveLength(4);
 
     const report = {

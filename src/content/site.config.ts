@@ -14,6 +14,7 @@ export const site = {
     email: "kjkundu2006@gmail.com",
     github: "https://github.com/KaranJoyKundu",
     linkedin: "https://www.linkedin.com/in/karan-joy-kundu-b460513b3/",
+    facebook: "https://facebook.com/karan.kundu-0206",
   },
 
   /** Home strip: the one real "currently building" fact. */

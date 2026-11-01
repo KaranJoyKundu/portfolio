@@ -13,6 +13,10 @@ export function Footer() {
             {site.links.email}
           </a>
           <span aria-hidden> · </span>
+          <a href={site.links.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-accent-text">
+            Facebook
+          </a>
+          <span aria-hidden> · </span>
           <Link to="/contact" className="hover:text-accent-text">
             Contact
           </Link>

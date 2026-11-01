@@ -3,7 +3,8 @@ const STORAGE_KEY = "theme";
 export type Theme = "dark" | "light";
 
 function current(): Theme {
-  return document.documentElement.classList.contains("light") ? "light" : "dark";
+  if (typeof document === "undefined") return "dark";
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
 }
 
 const listeners = new Set<() => void>();
@@ -24,7 +25,8 @@ export function getTheme(): Theme {
 }
 
 export function setTheme(theme: Theme): void {
-  document.documentElement.classList.toggle("light", theme === "light");
+  if (typeof document === "undefined") return;
+  document.documentElement.dataset.theme = theme;
   try {
     localStorage.setItem(STORAGE_KEY, theme);
   } catch {

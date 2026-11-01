@@ -1,8 +1,13 @@
 /*
  * DESIGN TOKENS — single source of truth.
- * Dark theme is the default (:root). Light theme overrides under `.light`,
- * applied to <html> by src/lib/theme.ts (respects prefers-color-scheme on
- * first visit, persists the user's explicit choice).
+ * Dark theme is the default (:root). Light theme overrides under
+ * [data-theme="light"], applied to <html> via data-theme by
+ * src/lib/theme.ts (respects prefers-color-scheme on first visit,
+ * persists the user's explicit choice). No flash of wrong theme.
+ *
+ * Style A (default) and Style B live behind [data-style] on <html>;
+ * every font/accent difference is a CSS variable override, so no
+ * component ever branches on a style name.
  *
  * Every text/background pair used for content is verified by
  * src/tokens.test.ts — the build fails below WCAG 2.2 AA.
@@ -38,9 +43,14 @@
   --dur-base: 200ms;
   --dur-reveal: 320ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Type — Style A (default): Instrument Serif + Inter Tight + IBM Plex Mono (labels). */
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Tight Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 }
 
-.light {
+[data-theme="light"] {
   color-scheme: light;
 
   --c-bg: #fafbfc;
@@ -59,8 +69,15 @@
   --c-btn-fg: #f5b759;
 }
 
+/* Style B overrides — Fraunces + Geist, amber hairline + mono caption rows. */
+[data-style="b"] {
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-sans: "Geist Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --c-accent-hairline: color-mix(in oklab, var(--c-accent) 45%, transparent);
+}
+
 /* Tailwind theme mapping — utilities like bg-bg, text-muted, font-mono. */
-@theme inline {
+@theme {
   --color-bg: var(--c-bg);
   --color-surface: var(--c-surface);
   --color-surface2: var(--c-surface-2);
@@ -73,9 +90,9 @@
   --color-btn-bg: var(--c-btn-bg);
   --color-btn-fg: var(--c-btn-fg);
 
-  --font-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Tight Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   --radius-xs: 2px;
   --radius-md: 8px;

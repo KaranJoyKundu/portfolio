@@ -24,16 +24,15 @@ function paletteOf(block: string): Palette {
   return vars;
 }
 
-/** Extract a CSS declaration block by selector, skipping comments. */
-function blockOf(selector: string): string {
-  const re = new RegExp(`${selector}\\s*\\{([\\s\\S]*?)\\n\\}`);
+/** Extract a CSS declaration block by regex source, skipping comments. */
+function blockOf(re: RegExp): string {
   const match = re.exec(css);
-  expect(match, `tokens.css is missing a ${selector} block`).not.toBeNull();
+  expect(match, "tokens.css is missing a block").not.toBeNull();
   return match![1] as string;
 }
 
-const dark = paletteOf(blockOf(":root"));
-const light = paletteOf(blockOf("\\.light"));
+const dark = paletteOf(blockOf(/:root\s*\{([\s\S]*?)\n\}/));
+const light = paletteOf(blockOf(/\[data-theme="light"\]\s*\{([\s\S]*?)\n\}/));
 
 function channel(hex: string, i: number): number {
   const v = Number.parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16) / 255;

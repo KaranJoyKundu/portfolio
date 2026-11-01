@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/lib/schema";
 import { cn } from "@/lib/utils";
-import { useTilt } from "@/lib/useTilt";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Tag } from "@/components/ui/Tag";
 import { ProjectCover } from "./ProjectCover";
@@ -15,13 +14,11 @@ type Props = {
 
 export function ProjectCard({ project, variant = "compact" }: Props) {
   const feature = variant === "feature";
-  const tiltRef = useTilt<HTMLAnchorElement>(feature ? 3 : 4);
   return (
     <Link
-      ref={tiltRef}
       to={`/projects/${project.slug}`}
       className={cn(
-        "tilt-card group relative flex h-full flex-col overflow-hidden rounded-md border border-border bg-surface transition-colors duration-[var(--dur-base)] hover:border-muted focus-visible:border-muted"
+        "group relative flex h-full flex-col overflow-hidden rounded-md border border-border bg-surface transition-colors duration-[var(--dur-base)] hover:border-muted focus-visible:border-muted"
       )}
     >
       <div
