@@ -1,13 +1,14 @@
 /*
  * DESIGN TOKENS — single source of truth.
- * Dark theme is the default (:root). Light theme overrides under
- * [data-theme="light"], applied to <html> via data-theme by
- * src/lib/theme.ts (respects prefers-color-scheme on first visit,
- * persists the user's explicit choice). No flash of wrong theme.
+ * Design B is the definitive production design (Fraunces + Geist +
+ * IBM Plex Mono labels, amber hairline accents). Dark theme is the
+ * default (:root); light theme overrides under [data-theme="light"],
+ * applied to <html> via data-theme by src/lib/theme.ts (respects
+ * prefers-color-scheme on first visit, persists the user's explicit
+ * choice). No flash of wrong theme.
  *
- * Style A (default) and Style B live behind [data-style] on <html>;
- * every font/accent difference is a CSS variable override, so no
- * component ever branches on a style name.
+ * Every font/accent difference is a CSS variable, so no component ever
+ * branches on a style name. Design B is the only production design.
  *
  * Every text/background pair used for content is verified by
  * src/tokens.test.ts — the build fails below WCAG 2.2 AA.
@@ -30,6 +31,7 @@
   --c-accent: #f5b759; /* strokes, markers, waveform on dark */
   --c-accent-text: #f5b759; /* links on dark */
   --c-on-accent: #201405; /* text on amber fills */
+  --c-accent-hairline: color-mix(in oklab, var(--c-accent) 45%, transparent); /* Design B amber hairline */
 
   /* Primary button fill (theme-specific: amber-on-dark, ink-on-light) */
   --c-btn-bg: #f5b759;
@@ -44,9 +46,9 @@
   --dur-reveal: 320ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Type — Style A (default): Instrument Serif + Inter Tight + IBM Plex Mono (labels). */
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-sans: "Inter Tight Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Type — Design B (final production design): Fraunces + Geist + IBM Plex Mono (labels). */
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Geist Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 }
 
@@ -69,13 +71,6 @@
   --c-btn-fg: #f5b759;
 }
 
-/* Style B overrides — Fraunces + Geist, amber hairline + mono caption rows. */
-[data-style="b"] {
-  --font-display: "Fraunces Variable", Georgia, serif;
-  --font-sans: "Geist Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --c-accent-hairline: color-mix(in oklab, var(--c-accent) 45%, transparent);
-}
-
 /* Tailwind theme mapping — utilities like bg-bg, text-muted, font-mono. */
 @theme {
   --color-bg: var(--c-bg);
@@ -90,8 +85,8 @@
   --color-btn-bg: var(--c-btn-bg);
   --color-btn-fg: var(--c-btn-fg);
 
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-sans: "Inter Tight Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Geist Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 
   --radius-xs: 2px;

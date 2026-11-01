@@ -5,7 +5,6 @@ import { site } from "@/content/site.config";
 import { visibleNavItems } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { StyleToggle } from "@/components/ui/StyleToggle";
 
 function MobileMenu({
   open,
@@ -93,7 +92,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <StyleToggle />
           <ThemeToggle />
           <MobileMenu open={open} onToggle={() => setOpen((v) => !v)} />
         </div>
