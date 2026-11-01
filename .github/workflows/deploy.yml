@@ -3,6 +3,9 @@ name: Build and deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # Every 6 hours — automatic GitHub project discovery.
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -31,6 +34,15 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      # Automatic GitHub project discovery (Phase 12): runs on the
+      # scheduled cadence and manual dispatch; skipped on plain pushes so
+      # normal deploys are never blocked by the GitHub API. On failure the
+      # step exits non-zero and the deploy is skipped — the last known-good
+      # committed catalog stays live.
+      - name: Discover GitHub projects (sync)
+        if: github.event_name != 'push'
+        run: node scripts/sync-github-projects.mjs --out src/content/generated/github-projects.json
 
       - name: Typecheck, lint, test (incl. WCAG contrast gate + content schemas)
         run: npm run verify

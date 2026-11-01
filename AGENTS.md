@@ -23,10 +23,12 @@ npm.cmd run test
 - Content: `src/content/` only; unverified fields use `contentStatus: "placeholder"`
   and are suppressed in production. Tests fail on invalid content or placeholders
   that should be real.
-- Fonts: Fontsource self-hosted. Instrument Serif + Inter Tight + IBM Plex Mono are
-  eager (critical); Fraunces + Geist lazy-load for style B (`src/lib/style.ts`).
-- Theme (`data-theme`) and style (`data-style`) are persisted; inline script in
-  `index.html` sets them before paint (no flash).
+- Fonts: Fontsource self-hosted. Fraunces (variable display) + Geist Sans (body) are
+  the eager critical faces; IBM Plex Mono (labels) eager. Design B is the definitive
+  production design (the Style A switch and its font packages were removed).
+- Theme (`data-theme`) is persisted; inline script in `index.html` sets it before
+  paint (no flash). Live OS `prefers-color-scheme` changes follow only while no
+  explicit preference is stored.
 - LCP: keep hero text in initial render; critical font preloads live in `index.html`.
 - Base path `/portfolio/`: `vite.config.ts` (`VITE_BASE`), og/sitemap/robots URLs,
   and the GH Pages workflow all derive from it.
@@ -39,5 +41,17 @@ npm.cmd run test
 
 ## Deploy
 
-`.github/workflows/deploy.yml` runs `npm run check` → build → deploy on push to
-`main`. GitHub Pages source must be **GitHub Actions**.
+`.github/workflows/deploy.yml` runs `npm run verify` → build → deploy on push to
+`main`, plus a scheduled (every 6 h) and manual (`workflow_dispatch`) GitHub
+project-discovery sync (`scripts/sync-github-projects.mjs`) that runs before the
+build on non-push events. GitHub Pages source must be **GitHub Actions**.
+
+## GitHub project auto-sync (Phase 12)
+
+- `scripts/sync-github-projects.mjs` + `scripts/sync-github-projects.test.mjs`.
+- Cron `0 */6 * * *` in the deploy workflow; manual via `workflow_dispatch`.
+- Writes `src/content/generated/github-projects.json` (committed default: `[]`) and
+  reads manual overrides from `src/content/generated/github-overrides.json`.
+- Curated (`src/content/projects/*.ts`) always win on slug collision; auto entries
+  are placeholder until overridden. Generated entries must pass `projectSchema`.
+- Fail-safe: API failure aborts the deploy (last known-good catalog stays live).
