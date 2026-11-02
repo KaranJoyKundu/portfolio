@@ -1,5 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
-import { listPublicRepos, syncGithubProjects } from "./sync-github-projects.mjs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { listPublicRepos, loadOverrides, syncGithubProjects } from "./sync-github-projects.mjs";
 
 function repo(overrides = {}) {
   return {
@@ -84,5 +87,62 @@ describe("github project sync", () => {
   it("fails safely when the GitHub API errors", async () => {
     const fetchImpl = vi.fn().mockResolvedValue({ ok: false, status: 403, statusText: "rate limit exceeded" });
     await expect(syncGithubProjects({ fetchImpl })).rejects.toThrow(/GitHub API request failed/);
+  });
+
+  it("lets a manual demo override take precedence over the repository homepage", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(
+      jsonResponse([
+        repo({
+          id: 3,
+          name: "demo-repo",
+          full_name: "KaranJoyKundu/demo-repo",
+          homepage: "https://from-github.example.com",
+        }),
+      ])
+    );
+    const result = await syncGithubProjects({
+      fetchImpl,
+      overrides: { "3": { demo: "https://manual.example.com" } },
+    });
+    expect(result.entries).toHaveLength(1);
+    expect(result.entries[0].links.demo).toBe("https://manual.example.com");
+  });
+});
+
+describe("github override loading (CLI)", () => {
+  it("loads overrides from a JSON file keyed by repo identifier", () => {
+    const dir = mkdtempSync(join(tmpdir(), "portfolio-overrides-"));
+    const path = join(dir, "overrides.json");
+    writeFileSync(path, JSON.stringify({ "42": { demo: "https://manual.example.com" } }));
+    expect(loadOverrides(path)).toEqual({ "42": { demo: "https://manual.example.com" } });
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("returns empty overrides when the overrides file is missing", () => {
+    expect(loadOverrides(join(tmpdir(), "portfolio-definitely-missing-overrides.json"))).toEqual({});
+  });
+
+  it("throws on a malformed overrides file instead of ignoring it", () => {
+    const dir = mkdtempSync(join(tmpdir(), "portfolio-overrides-"));
+    const path = join(dir, "overrides.json");
+    writeFileSync(path, "{ not valid json ");
+    expect(() => loadOverrides(path)).toThrow();
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("rejects an overrides file that is not a JSON object", () => {
+    const dir = mkdtempSync(join(tmpdir(), "portfolio-overrides-"));
+    const path = join(dir, "overrides.json");
+    writeFileSync(path, "[]");
+    expect(() => loadOverrides(path)).toThrow(/Invalid overrides file structure/);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("treats an existing but empty overrides file as empty overrides", () => {
+    const dir = mkdtempSync(join(tmpdir(), "portfolio-overrides-"));
+    const path = join(dir, "overrides.json");
+    writeFileSync(path, "{}");
+    expect(loadOverrides(path)).toEqual({});
+    rmSync(dir, { recursive: true, force: true });
   });
 });

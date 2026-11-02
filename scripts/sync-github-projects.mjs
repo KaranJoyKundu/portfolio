@@ -16,7 +16,7 @@
  *   nothing is fabricated.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -91,8 +91,8 @@ function toAutoProject(repo, overrides = {}) {
     ...(typeof overrides.year === "string" ? { year: overrides.year } : {}),
     links: {
       github: `https://github.com/${repo.full_name}`,
-      ...(typeof overrides.demo === "string" ? { demo: overrides.demo } : {}),
       ...(repo.homepage && /^https?:\/\//i.test(repo.homepage) ? { demo: repo.homepage } : {}),
+      ...(typeof overrides.demo === "string" ? { demo: overrides.demo } : {}),
     },
     order: typeof overrides.order === "number" ? overrides.order : Math.floor(Date.parse(repo.created_at) / 1000),
     featured: overrides.featured === true,
@@ -157,6 +157,16 @@ export async function syncGithubProjects({
 
 /* ── CLI ─────────────────────────────────────────────────────────────────── */
 
+/** Load manual overrides keyed by repo id / full name / repo name. */
+export function loadOverrides(overridesPath) {
+  if (!existsSync(overridesPath)) return {};
+  const parsed = JSON.parse(readFileSync(overridesPath, "utf8"));
+  if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+    return parsed;
+  }
+  throw new Error(`Invalid overrides file structure at ${overridesPath}: expected a JSON object keyed by repo identifier.`);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const ownerIndex = args.indexOf("--owner");
@@ -166,14 +176,7 @@ async function main() {
   const overridesPathIndex = args.indexOf("--overrides");
   const overridesPath = resolve(process.cwd(), overridesPathIndex !== -1 ? args[overridesPathIndex + 1] ?? "src/content/generated/github-overrides.json" : "src/content/generated/github-overrides.json");
 
-  const rawOverrides = {};
-  try {
-    const parsed = JSON.parse(readFileSync(overridesPath, "utf8"));
-    if (parsed && typeof parsed === "object") rawOverrides = parsed;
-  } catch {
-    // Missing overrides file is fine: no manual overrides yet.
-  }
-
+  const rawOverrides = loadOverrides(overridesPath);
   const result = await syncGithubProjects({ owner, overrides: rawOverrides });
   mkdirSync(resolve(process.cwd(), "src/content/generated"), { recursive: true });
   writeFileSync(out, JSON.stringify(result.entries, null, 2) + "\n");

@@ -3,6 +3,8 @@ name: Build and deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   schedule:
     # Every 6 hours — automatic GitHub project discovery.
     - cron: "0 */6 * * *"
@@ -14,11 +16,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
+    # PRs run validation only; production deploy stays on push/schedule/dispatch.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,13 +39,11 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Automatic GitHub project discovery (Phase 12): runs on the
-      # scheduled cadence and manual dispatch; skipped on plain pushes so
-      # normal deploys are never blocked by the GitHub API. On failure the
-      # step exits non-zero and the deploy is skipped — the last known-good
-      # committed catalog stays live.
+      # Automatic GitHub project discovery (Phase 12): runs before EVERY
+      # production build (push to main, scheduled, manual). If this step
+      # fails the workflow stops before build/deploy, so the live site keeps
+      # serving the last known-good catalog (fail safe, never an empty deploy).
       - name: Discover GitHub projects (sync)
-        if: github.event_name != 'push'
         run: node scripts/sync-github-projects.mjs --out src/content/generated/github-projects.json
 
       - name: Typecheck, lint, test (incl. WCAG contrast gate + content schemas)
@@ -66,8 +68,46 @@ jobs:
         with:
           path: dist
 
+  pull-request-validation:
+    # CI gate for pull requests: sync → verify → build. No Pages deploy.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Discover GitHub projects (sync) — PR validation only
+        run: node scripts/sync-github-projects.mjs --out src/content/generated/github-projects.json
+
+      - name: Typecheck, lint, test (incl. WCAG contrast gate + content schemas)
+        run: npm run verify
+        env:
+          VITE_BASE: /portfolio/ # ← single place; must match this repo's subpath
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE: /portfolio/ # ← single place; see README "Deployment"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pr-build
+          path: dist
+          if-no-files-found: error
+
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pages: write
