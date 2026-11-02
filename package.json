@@ -19,7 +19,7 @@
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource/geist-sans": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
-    "lucide-react": "^1.62.0",
+    "lucide-react": "^1.65.0",
     "motion": "^14.7.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
