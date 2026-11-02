@@ -2,7 +2,7 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
-import { rawProjects } from "@/content/projects";
+import { rawProjects, autoProjects } from "@/content/projects";
 import { rawAchievements } from "@/content/achievements";
 import { projectSchema, achievementSchema } from "@/lib/schema";
 import {
@@ -25,6 +25,12 @@ describe("content schema integrity", () => {
       expect(() => projectSchema.parse(p), p.slug).not.toThrow();
     }
     expect(projects.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it("parses every auto-discovered github project against the schema", () => {
+    for (const p of autoProjects) {
+      expect(() => projectSchema.parse(p), p.slug).not.toThrow();
+    }
   });
 
   it("parses every achievement against the schema", () => {

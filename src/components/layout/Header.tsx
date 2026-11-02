@@ -1,11 +1,10 @@
 import { NavLink, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { site } from "@/content/site.config";
 import { visibleNavItems } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { StyleToggle } from "@/components/ui/StyleToggle";
 
 function MobileMenu({
   open,
@@ -15,9 +14,40 @@ function MobileMenu({
   onToggle: () => void;
 }) {
   const items = visibleNavItems();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the menu; move focus to the toggle so keyboard users
+  // aren't stranded without a visible focus target.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onToggle();
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    buttonRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onToggle]);
+
+  // Click outside closes the menu.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        onToggle();
+      }
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [open, onToggle]);
+
   return (
-    <div className="md:hidden">
+    <div className="md:hidden" ref={panelRef}>
       <button
+        ref={buttonRef}
         type="button"
         aria-expanded={open}
         aria-controls="mobile-nav"
@@ -39,6 +69,7 @@ function MobileMenu({
                 <NavLink
                   to={item.to}
                   end={item.to === "/"}
+                  onClick={onToggle}
                   className={({ isActive }) =>
                     cn(
                       "block py-2 font-mono text-sm",
@@ -60,11 +91,12 @@ function MobileMenu({
 export function Header() {
   const [open, setOpen] = useState(false);
   const items = visibleNavItems();
+  const toggle = () => setOpen((v) => !v);
 
   return (
     <header className="sticky top-0 z-50 relative border-b border-border bg-bg/90">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link to="/" className="font-mono text-sm tracking-tight text-text">
+        <Link to="/" onClick={toggle} className="font-mono text-sm tracking-tight text-text">
           {site.shortName}
           <span className="text-muted"> / ECE·KUET</span>
         </Link>
@@ -76,6 +108,7 @@ export function Header() {
                 <NavLink
                   to={item.to}
                   end={item.to === "/"}
+                  onClick={toggle}
                   className={({ isActive }) =>
                     cn(
                       "font-mono text-xs uppercase tracking-[0.14em] transition-colors duration-[var(--dur-fast)]",
@@ -93,9 +126,8 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <StyleToggle />
           <ThemeToggle />
-          <MobileMenu open={open} onToggle={() => setOpen((v) => !v)} />
+          <MobileMenu open={open} onToggle={toggle} />
         </div>
       </div>
     </header>

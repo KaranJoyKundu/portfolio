@@ -4,54 +4,47 @@ Personal portfolio for **Karan Joy Kundu** — React 19 + TypeScript (strict) +
 Vite 8 + Tailwind CSS 4 (CSS-variable tokens) + Motion + Lucide + Zod + Vitest,
 deployed to GitHub Pages at `https://karanjoykundu.github.io/portfolio/`.
 
-## Current status (as of 2026-11-01)
+## Current status (as of 2026-11-01, branch `feat/design-b-final-security-performance`)
 
-- **Build**: green via `npm run check` (typecheck + lint + 29 tests + build).
-  - Lint: 1 pre-existing warning (`src/lib/seo.tsx:43 react-refresh/only-export-components`).
-  - Build: main JS **129.95 kB gz** (< 150 KB budget ✓), CSS 6.91 kB gz,
-    fonts self-hosted via Fontsource (Instrument Serif, Inter Tight, IBM Plex Mono
-    eager; Fraunces + Geist lazy for style B).
-- **Design**: two switchable visual directions (A "Instrument Ledger", B
-  "Amber Trace") via `data-style` on `<html>`; dark default, `.light` overrides.
-  Accent `#F5B759` (dark) / `#B4771A` UI (light). Theme toggle is a real
-  `role="switch"` button; style toggle `role="group"` + `aria-pressed`.
+- **Branch**: `feat/design-b-final-security-performance` (from `main` @ `e5b3fa7`);
+  NOT merged. Work so far: Design B finalization, theme/system fix, canonical URLs,
+  mobile-nav fix, security hardening, SEO tests, GitHub sync system.
+- **Build**: green via `npm run check` (typecheck + lint + **34 tests** + build).
+  - Lint: 0 errors (3 pre-existing-style fast-refresh warnings in `src/lib/seo.tsx`).
+  - Build: main JS **129.94 kB gz** (< 150 KB budget ✓), CSS 6.70 kB gz.
+- **Design**: **Design B is the definitive production design** (Fraunces + Geist Sans +
+  IBM Plex Mono labels, amber `#F5B759` accent). Style A switch, `data-style`, and the
+  Style A font packages were removed. Dark default, light overrides.
 - **Performance** (Lighthouse, Playwright Chromium headless, local preview at
-  `/portfolio/`):
-  - Desktop preset: **Performance 100, LCP 0.7 s, FCP 0.2 s, TBT 0 ms, CLS 0**,
-    a11y/BP/SEO 100.
-  - Mobile-emulated home: **Performance 0.91, LCP 3.5 s, FCP 0.8 s, TBT 0, CLS 0**,
-    a11y/BP/SEO 100.
-  - Kairos project page (mobile): **Performance 0.87, LCP 2.7 s, FCP 1.6 s, TBT 240 ms, CLS 0.13**.
-  - LCP element = hero paragraph; render delay ~574–662 ms (font settle).
-    Critical font preloads added to `index.html` (post this writing) — desktop
-    re-verified at LCP 0.7 s / perf 100.
+  `/portfolio/`; live site deployed at `https://karanjoykundu.github.io/portfolio/`):
+  - Live post-deploy: desktop Perf **0.99, LCP 0.8 s, FCP 0.6 s, TBT 0, CLS 0**, a11y/
+    BP/SEO **100**; mobile Perf **0.95, LCP 3.0 s, FCP 0.8 s, TBT 0, CLS 0**, a11y/BP/SEO
+    **100**. Local pre-deploy mobile-emulated: LCP 3.4–3.5 s; desktop 0.7–0.8 s.
+  - **Open perf bar**: mobile-emulated LCP still above 2.5 s target (3.0 s live / 3.5 s
+    local; desktop 0.8 s passes). Not yet re-measured after Design B switch.
 - **Content**: everything unverified is marked `contentStatus: "placeholder"` and
-  suppressed in production (tests enforce). Kairos case study shipped as
-  `verified` (status `in-progress`). Bee robot content `verified`/shipped.
+  suppressed in production (tests enforce). Kairos case study shipped as `verified`
+  (status `in-progress`). Bee robot content `verified`/shipped.
   `karan.md` is a private working doc — **never commit it**.
-- **Deploy**: not yet done — gh CLI not installed/auth'd as of handoff.
+- **Deploy**: done earlier — workflow run `41285531119` succeeded; live site verified
+  (HTTP 200, assets/CSS/fonts/OG OK, deep-link SPA fallback OK).
 
-## Commands
+## GitHub project auto-sync (Phase 12, new on this branch)
 
-- `npm.cmd run check` — full gate (typecheck, lint, test, build).
-- `npm.cmd run dev` / `npm.cmd run preview -- --host 127.0.0.1 --port 4173`
-  (preview serves `dist/` at `/portfolio/`).
-- Tests: 29 across 3 files (`src/tokens.test.ts`, content/schema tests, `App.test.tsx`).
-- Lighthouse (global install): run via
-  `node "C:\Users\pc\AppData\Roaming\npm\node_modules\lighthouse\cli\index.js" <url> --output=json --output-path="C:\Users\pc\AppData\Local\Temp\opencode\lhr-<name>.json --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new --no-sandbox" [--preset=desktop] --quiet`
-  with `$env:CHROME_PATH = "C:\Users\pc\AppData\Local\ms-playwright\chromium-1208\chrome-win64\chrome.exe"`.
-
-## Deployment checklist (remaining)
-
-1. `winget install --id GitHub.cli -e --accept-package-agreements`
-2. `gh auth status` → if needed, `gh auth login`
-3. `gh repo create KaranJoyKundu/portfolio --public` (from a git repo — `git init` first if needed)
-4. Push, enable GitHub Pages (workflow: `.github/workflows/deploy.yml` → source: GitHub Actions)
-5. Post-deploy: lighthouse on the live URL, verify `/portfolio/` deep links via 404 shim.
+- `scripts/sync-github-projects.mjs` (+ tests, mock-fetch based, 5 tests) discovers
+  public repos of `KaranJoyKundu` (skip: private/fork/archived/portfolio), merges
+  overrides from `src/content/generated/github-overrides.json`, writes generated
+  catalog, validates via `projectSchema`.
+- Wired into `.github/workflows/deploy.yml`: schedule cron `0 */6 * * *` +
+  `workflow_dispatch`; sync step skipped on plain pushes; deploy skipped if sync or
+  verify fails.
+- Committed generated defaults: `src/content/generated/github-projects.json` = `[]`,
+  `github-overrides.json` = `{}`.
 
 ## Open items
 
 - Facebook profile photo / demo video public URLs (user-supplied when verified).
-- Mobile-emulated Lighthouse perf bar: home at 0.91 / LCP 3.5 s (desktop passes all
-  bars; mobile LCP fix still open — candidates: reduce hero reveal delay, font handling).
-- Final commit + `HANDOFF.md` / `AGENTS.md` authorship.
+- Mobile-emulated Lighthouse perf bar: home at 3.0 s LCP live (desktop passes all
+  bars; mobile LCP fix still open — candidates: hero reveal delay, font handling).
+- Branch protection / Dependabot pending owner configuration (see final report).
+- Final summary + PR/branch link for review before merge.

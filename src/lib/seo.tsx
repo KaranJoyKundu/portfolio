@@ -1,6 +1,23 @@
 import { site } from "@/content/site.config";
 
 /**
+ * Base path normalization: Vite's BASE_URL is e.g. "/portfolio/" (GitHub
+ * Pages subpath) or "/" (custom domain). Strip trailing slashes so joining a
+ * route never produces "//" segments in canonical URLs.
+ */
+function basePath(): string {
+  const base = (import.meta.env.BASE_URL || "/").trim();
+  const withoutSlash = base.length > 1 ? base.replace(/\/+$/, "") : "";
+  return withoutSlash;
+}
+
+function withBase(path: string): string {
+  const base = basePath();
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return `${site.siteUrl}${base}${normalized}`;
+}
+
+/**
  * Per-page document metadata via React 19 head hoisting.
  * `path` is the route path starting with "/" (merged onto the Vite base),
  * so canonical URLs stay correct under the /portfolio/ GitHub Pages base.
@@ -16,9 +33,8 @@ export function Seo({
   path?: string;
   ogType?: "website" | "profile";
 }) {
-  const base = import.meta.env.BASE_URL; // e.g. "/portfolio/"
-  const canonical = `${site.siteUrl}${base}${path}`;
-  const image = `${site.siteUrl}${base}og-image.png`;
+  const canonical = withBase(path);
+  const image = `${site.siteUrl}${basePath()}/og-image.png`;
 
   return (
     <>
@@ -39,9 +55,19 @@ export function Seo({
   );
 }
 
+/** Canonical URL for a route (homepage: "/portfolio/", nested: "/portfolio/projects/x"). */
+export function canonicalUrl(path = ""): string {
+  return withBase(path);
+}
+
+/** Absolute URL of the social/OG image for the deployed site. */
+export function ogImageUrl(): string {
+  return `${site.siteUrl}${basePath()}/og-image.png`;
+}
+
 /** Static JSON-LD Person schema for the home page. */
 export function personJsonLd(): string {
-  const url = `${site.siteUrl}${import.meta.env.BASE_URL}`;
+  const url = withBase("/");
   return JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Person",

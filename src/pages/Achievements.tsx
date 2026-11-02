@@ -1,6 +1,7 @@
 import { Section } from "@/components/ui/Section";
 import { verifiedAchievements } from "@/lib/content";
 import { Seo } from "@/lib/seo";
+import { isSafeUrl } from "@/lib/utils";
 
 /**
  * ACHIEVEMENTS — ledger of verified items with source links.
@@ -38,7 +39,7 @@ export function Achievements() {
                 </span>
               </p>
               <a
-                href={a.source}
+                href={isSafeUrl(a.source) ? a.source : undefined}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="justify-self-end font-mono text-xs text-accent-text underline underline-offset-4"

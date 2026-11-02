@@ -4,6 +4,7 @@ import { Section } from "@/components/ui/Section";
 import { CopyEmail } from "@/components/ui/CopyEmail";
 import { site } from "@/content/site.config";
 import { Seo } from "@/lib/seo";
+import { isSafeUrl } from "@/lib/utils";
 
 const CHANNELS = [
   {
@@ -70,7 +71,7 @@ export function Contact() {
         {CHANNELS.map((c) => (
           <a
             key={c.label}
-            href={c.href}
+            href={isSafeUrl(c.href) ? c.href : undefined}
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center justify-between gap-4 py-5"

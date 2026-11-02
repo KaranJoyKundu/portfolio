@@ -1,4 +1,4 @@
-import { rawProjects } from "@/content/projects";
+import { rawProjects, autoProjects } from "@/content/projects";
 import { rawAchievements } from "@/content/achievements";
 import { rawTimeline } from "@/content/timeline";
 import { rawLabEntries } from "@/content/lab-entries";
@@ -29,7 +29,9 @@ import type {
 export const IS_DEV: boolean = import.meta.env.DEV;
 
 /** Typed, order-sorted project list (validated in content.test.ts). */
-export const projects: Project[] = [...rawProjects].sort((a, b) => a.order - b.order);
+export const projects: Project[] = [...rawProjects, ...autoProjects]
+  .filter((p, index, arr) => arr.findIndex((q) => q.slug === p.slug) === index)
+  .sort((a, b) => a.order - b.order);
 
 export const featuredProjects: Project[] = projects.filter((p) => p.featured);
 

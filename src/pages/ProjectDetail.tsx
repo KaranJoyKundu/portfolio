@@ -7,6 +7,7 @@ import { FigureWithCaption } from "@/components/ui/FigureWithCaption";
 import { projectBySlug, caseStudyOf } from "@/lib/content";
 import { NotFound } from "@/pages/NotFound";
 import { Seo } from "@/lib/seo";
+import { isSafeUrl } from "@/lib/utils";
 
 export function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -112,7 +113,7 @@ export function ProjectDetail() {
             <div>
               <h2 className="font-mono text-xs uppercase tracking-[0.14em] text-muted">Source</h2>
               <a
-                href={project.links.github}
+                href={project.links?.github && isSafeUrl(project.links.github) ? project.links.github : undefined}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 inline-block font-mono text-sm text-accent-text underline underline-offset-4"

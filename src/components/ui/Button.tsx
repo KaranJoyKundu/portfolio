@@ -1,6 +1,6 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn, isSafeUrl } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md";
@@ -56,10 +56,10 @@ export function Button({
   }
   if ("href" in rest && rest.href !== undefined) {
     const { href, ...anchorRest } = rest as ButtonAsExternal;
-    const external = href.startsWith("http");
+    const external = isSafeUrl(href) && !href.startsWith("/");
     return (
       <a
-        href={href}
+        href={external ? href : undefined}
         className={classes}
         {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
         {...anchorRest}
