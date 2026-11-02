@@ -55,20 +55,26 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  --c-bg: #fafbfc;
+  /* Surfaces — soft sky blue */
+  --c-bg: #e9f1f8;
   --c-surface: #ffffff;
-  --c-surface-2: #f2f4f6;
-  --c-border: #dfe6ec;
+  --c-surface-2: #f2f7fc;
 
-  --c-text: #10181f;
-  --c-muted: #4a5764;
+  /* Borders — soft blue hairline */
+  --c-border: #d3e2ef;
 
-  --c-accent: #b4771a; /* UI strokes on light */
-  --c-accent-text: #8a5c00; /* links on light */
-  --c-on-accent: #201405;
+  /* Text — deep navy */
+  --c-text: #0d1b2a;
+  --c-muted: #3f5c77;
 
-  --c-btn-bg: #10181f;
-  --c-btn-fg: #f5b759;
+  /* Accent — elegant sky blue */
+  --c-accent: #1668c9; /* strokes, markers, waveform on light */
+  --c-accent-text: #0f5cb8; /* links on light */
+  --c-on-accent: #ffffff; /* text on sky fills (light) */
+
+  /* Primary button fill — sky blue with white text (AA >= 4.5:1) */
+  --c-btn-bg: #1668c9;
+  --c-btn-fg: #ffffff;
 }
 
 /* Tailwind theme mapping — utilities like bg-bg, text-muted, font-mono. */
